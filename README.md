@@ -1,7 +1,7 @@
 ### This component only works on HA 0.96 and later.
 
-# Custom component for Tydom / Delta Dore
-A platform which allows you to interact with the Delta Dore Thermostast.
+# Custom component for Repsol Luz y Gas
+A platform which allows you to get data from Repsol Luz y Gas website.
 
 ## Know Limitations
 - This component is limited to 1 house - MultiHouses is not working
