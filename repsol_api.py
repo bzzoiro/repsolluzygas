@@ -147,9 +147,10 @@ class RepsolLuzYGasSensor():
             for var in data:
                 data[var] += response[var]
 
-        data['totalDays'] = response['totalDays']
-        data['averageAmount'] = round(float(data['amount'] / response['totalDays']),2)
-        data['number_of_contracts'] = contracts['number_of_contracts']
+        if response['totalDays'] > 0:
+            data['totalDays'] = response['totalDays']
+            data['averageAmount'] = round(float(data['amount'] / response['totalDays']),2)
+            data['number_of_contracts'] = contracts['number_of_contracts']
         self.data = data
 
         _LOGGER.debug('Sensor Data {}'.format(self.data))
