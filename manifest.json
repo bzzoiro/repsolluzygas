@@ -1,6 +1,6 @@
 {
-    "domain": "repsolluzygas
-    "name": "Sensor - Repsol Luz y Gas
+    "domain": "repsolluzygas",
+    "name": "Sensor - Repsol Luz y Gas",
     "documentation": "https://github.com/bzzoiro/repsolluzygas",
     "dependencies": [],
     "codeowners": ["@bzzoiro"],
