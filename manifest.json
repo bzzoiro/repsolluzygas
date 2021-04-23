@@ -2,6 +2,7 @@
     "domain": "repsolluzygas",
     "name": "Sensor - Repsol Luz y Gas",
     "documentation": "https://github.com/bzzoiro/repsolluzygas",
+    "version": "1.0.0",
     "dependencies": [],
     "codeowners": ["@bzzoiro"],
     "requirements": ["requests"],
