@@ -1,0 +1,8 @@
+{
+  "name": "Repsol Luz y Gas",
+  "zip_release": true,
+  "hide_default_branch": true,
+  "homeassistant": "0.96",
+  "hacs": "0.19.0",
+  "filename": "repsol.zip"
+}
