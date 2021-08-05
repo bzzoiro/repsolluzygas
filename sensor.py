@@ -1,9 +1,14 @@
 """Platform for sensor integration."""
 from .repsol_api import RepsolLuzYGasSensor
 from homeassistant.helpers.entity import Entity
-from homeassistant.components.sensor import PLATFORM_SCHEMA
-from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_USERNAME
+from homeassistant.components.sensor import (
+    PLATFORM_SCHEMA,
+    STATE_CLASS_MEASUREMENT,
+    SensorEntity,
+)
+from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_USERNAME, DEVICE_CLASS_ENERGY, ENERGY_KILO_WATT_HOUR
 import voluptuous as vol
+from homeassistant.util import dt as dt_util
 import homeassistant.helpers.config_validation as cv
 from datetime import timedelta
 import requests
@@ -44,8 +49,10 @@ class RepsolLuzYGazEntity(Entity):
         self._name = name
         self.variable = variable
         self.is_master = is_master
-        self.unit = unit
-
+        if self.unit = ENERGY_KILO_WATT_HOUR:
+            self._attr_state_class == STATE_CLASS_MEASUREMENT
+            self._attr_device_class = DEVICE_CLASS_ENERGY
+            self._attr_last_reset = dt_util.utc_from_timestamp(0)
 
     @property
     def name(self):
