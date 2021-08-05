@@ -8,5 +8,6 @@
   "homeassistant": "0.96",
   "hacs": "0.19.0",
   "render_readme": true,
+  "iot_class": "Cloud Push"
   "filename": "repsol.zip"
 }
