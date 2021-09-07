@@ -6,6 +6,7 @@
     "dependencies": [],
     "codeowners": ["@bzzoiro"],
     "version": "0.1",
+    "issue_tracker": "https://github.com/bzzoiro/repsolluzygas/issues",
     "iot_class": "cloud_polling"
   }
   
