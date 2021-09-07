@@ -5,7 +5,6 @@
     "version": "1.0.0",
     "dependencies": [],
     "codeowners": ["@bzzoiro"],
-    "requirements": ["requests"],
     "homeassistant": "0.96.0",
     "version": "0.1",
     "iot_class": "cloud_polling"
