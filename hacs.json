@@ -1,10 +1,6 @@
 {
   "name": "Repsol Luz y Gas",
-  "zip_release": true,
-  "hide_default_branch": true,
-  "domains": [
-      "sensor"
-  ],
+  "domains": "sensor",
   "homeassistant": "0.96",
   "hacs": "0.19.0",
   "render_readme": true,
