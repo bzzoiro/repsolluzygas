@@ -99,7 +99,33 @@ class RepsolLuzYGasSensor():
         _LOGGER.debug('Contracts {}'.format(contracts))
 
         return contracts
+    
+    def get_invoices(self, uid, signature, tstamp, house_id, contract_id):
+        
+        headers = {
+            'Connection': 'keep-alive',
+            'Pragma': 'no-cache',
+            'Cache-Control': 'no-cache',
+            'sec-ch-ua': '^\\^Google',
+            'x-origin': 'WEB',
+            'sec-ch-ua-mobile': '?0',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36',
+            'Accept': 'application/json, text/plain, */*',
+            'UID': uid,
+            'signature': signature,
+            'signatureTimestamp': tstamp,
+            'Sec-Fetch-Site': 'same-origin',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Dest': 'empty',
+            'Referer': 'https://areacliente.repsolluzygas.com/mis-hogares',
+            'Accept-Language': 'en-US,en;q=0.9',
+        }
 
+        response = requests.get('https://areacliente.repsolluzygas.com/api/v2/houses/{}/products/{}/invoices?limit=3'.format(house_id, contract_id), headers=headers, cookies=self.cookies)
+        response = response.json()
+
+        _LOGGER.debug('Invoices Data {}'.format(response))
+        return response
 
     def get_costs(self, uid, signature, tstamp, house_id, contract_id):
         
