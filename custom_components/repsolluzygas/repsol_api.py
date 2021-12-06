@@ -121,7 +121,7 @@ class RepsolLuzYGasSensor():
             'Accept-Language': 'en-US,en;q=0.9',
         }
 
-        response = requests.get('https://areacliente.repsolluzygas.com/api/v2/houses/{}/products/{}/invoices?limit=3'.format(house_id, contract_id), headers=headers, cookies=self.cookies)
+        response = requests.get('https://areacliente.repsolluzygas.com/api/v2/houses/{}/products/{}/invoices?limit=1'.format(house_id, contract_id), headers=headers, cookies=self.cookies)
         response = response.json()
 
         _LOGGER.debug('Invoices Data {}'.format(response))
@@ -150,7 +150,7 @@ class RepsolLuzYGasSensor():
 
         response = requests.get('https://areacliente.repsolluzygas.com/api/houses/{}/products/{}/consumption/accumulated'.format(house_id, contract_id), headers=headers, cookies=self.cookies)
         response = response.json()
-
+         
         vars = ['totalDays', 'consumption', 'amount', 'amountVariable', 'amountFixed'] 
         data = {}
 
@@ -177,6 +177,12 @@ class RepsolLuzYGasSensor():
             data['totalDays'] = response['totalDays']
             data['averageAmount'] = round(float(data['amount'] / response['totalDays']),2)
             data['number_of_contracts'] = contracts['number_of_contracts']
+
+        if len(contracts) > 0:
+            invoices = self.get_invoices(uid, signature, tstamp, contracts['house_id'], contract['contract_id'])
+            data['last_invoice_amount'] = invoices[0]['amount']
+            data['last_invoice_paid'] = invoices[0]['status'] == 'PAID'
+
         self.data = data
 
         _LOGGER.debug('Sensor Data {}'.format(self.data))
