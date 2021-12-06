@@ -3,6 +3,13 @@
 # Custom component for Repsol Luz y Gas
 A platform which allows you to get data from Repsol Luz y Gas website.
 
+## Changelog
+
+### Version 1.1 - 06/12/2021:
+- Added 2 new sensors: Last Invoice Amount (Numeric) and Last Invoice Status (Boolean).
+Last Invoice Amount (LIA): represents the amount of the last amount.
+Last Invoice Status (LIS): it's a boolean that returns if invoice was paid or not.
+
 ## Know Limitations
 - This component is limited to 1 house - MultiHouses is not working
 - Data is updated every 2 hours
