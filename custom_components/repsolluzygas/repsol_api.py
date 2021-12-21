@@ -82,6 +82,7 @@ class RepsolLuzYGasSensor():
 
         response = requests.get('https://areacliente.repsolluzygas.com/api/houses', headers=headers, cookies=self.cookies)
         data = response.json()
+        _LOGGER.debug('Contracts Data {}'.format(data))
         contracts = {}
 
         data = data[0]
@@ -93,10 +94,9 @@ class RepsolLuzYGasSensor():
             info['contract_id'] = contract['code']
             info['type'] = contract['contractType']
             info['active'] = contract['status'] == 'ACTIVE'
-            info['product_name'] = contract['commercialName']
             contracts['information'].append(info)
 
-        _LOGGER.debug('Contracts {}'.format(contracts))
+        _LOGGER.debug('Contracts Parsed {}'.format(contracts))
 
         return contracts
     
