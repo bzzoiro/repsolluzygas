@@ -41,7 +41,7 @@ class RepsolLuzYGazEntity(Entity):
 
     def __init__(self, client, name, variable, unit, is_master):
 
-        _LOGGER.debug('Initalizing Entity {}'.format(name))
+        _LOGGER.debug('Initalizing Entity testestestestste {}'.format(name))
 
         self.client = client
         self._name = name
@@ -58,6 +58,8 @@ class RepsolLuzYGazEntity(Entity):
     @property
     def state(self):
         """Return the state of the sensor."""
+        _LOGGER.debug('Test1 {}'.format(self.client))
+
         data = self.client.data.get(self.variable, 0)
         _LOGGER.debug('{} has value: {}'.format(self._name, data))
         return data
@@ -70,4 +72,5 @@ class RepsolLuzYGazEntity(Entity):
     def update(self):
         """ This is the updater  """
         if self.is_master:
+            _LOGGER.debug('Test2 {}'.format(self.client))
             self.client.update()

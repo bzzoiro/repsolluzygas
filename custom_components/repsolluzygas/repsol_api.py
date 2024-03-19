@@ -33,6 +33,7 @@ class RepsolLuzYGasSensor():
             'Sec-Fetch-Mode': 'cors',
             'Sec-Fetch-Dest': 'empty',
             'Accept-Language': 'en-US,en;q=0.9',
+            'Market': 'ML',
         }
 
         data = {
@@ -78,6 +79,7 @@ class RepsolLuzYGasSensor():
             'Sec-Fetch-Dest': 'empty',
             'Referer': 'https://areacliente.repsolluzygas.com/mis-hogares',
             'Accept-Language': 'en-US,en;q=0.9',
+            'Market': 'ML',
         }
 
         response = requests.get('https://areacliente.repsolluzygas.com/api/houses', headers=headers, cookies=self.cookies)
@@ -119,6 +121,7 @@ class RepsolLuzYGasSensor():
             'Sec-Fetch-Dest': 'empty',
             'Referer': 'https://areacliente.repsolluzygas.com/mis-hogares',
             'Accept-Language': 'en-US,en;q=0.9',
+            'Market': 'ML',
         }
 
         response = requests.get('https://areacliente.repsolluzygas.com/api/v2/houses/{}/products/{}/invoices?limit=1'.format(house_id, contract_id), headers=headers, cookies=self.cookies)
@@ -146,6 +149,7 @@ class RepsolLuzYGasSensor():
             'Sec-Fetch-Dest': 'empty',
             'Referer': 'https://areacliente.repsolluzygas.com/mis-hogares',
             'Accept-Language': 'en-US,en;q=0.9',
+            'Market': 'ML',
         }
 
         response = requests.get('https://areacliente.repsolluzygas.com/api/houses/{}/products/{}/consumption/accumulated'.format(house_id, contract_id), headers=headers, cookies=self.cookies)
@@ -159,6 +163,7 @@ class RepsolLuzYGasSensor():
 
         _LOGGER.debug('Costs Data {}'.format(data))
         return data
+
 
     def update(self):
 
@@ -178,12 +183,16 @@ class RepsolLuzYGasSensor():
             data['averageAmount'] = round(float(data['amount'] / response['totalDays']),2)
             data['number_of_contracts'] = contracts['number_of_contracts']
 
-        if len(contracts) > 0:
-            invoices = self.get_invoices(uid, signature, tstamp, contracts['house_id'], contract['contract_id'])
-            data['last_invoice_amount'] = invoices[0]['amount']
-            data['last_invoice_paid'] = invoices[0]['status'] == 'PAID'
+        if contracts and contracts['information']:
+            invoices = self.get_invoices(uid, signature, tstamp, contracts['house_id'], contracts['information'][0]['contract_id'])
+            if invoices:
+                if invoices[0].get('amount'):
+                    data['last_invoice_amount'] = invoices[0]['amount']
+                if invoices[0].get('status'):
+                    data['last_invoice_paid'] = invoices[0]['status'] == 'PAID'
 
         self.data = data
 
         _LOGGER.debug('Sensor Data {}'.format(self.data))
         return True
+
