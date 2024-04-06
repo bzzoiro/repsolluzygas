@@ -5,6 +5,10 @@ A platform which allows you to get data from Repsol Luz y Gas website.
 
 ## Changelog
 
+### Version 1.2 - 06/04/2024:
+- updated code to cater for API changes (thanks to @jesusperiago)
+- cleaned logging (thanks to @jesusperiago)
+
 ### Version 1.1 - 06/12/2021:
 - Added 2 new sensors: Last Invoice Amount (Numeric) and Last Invoice Status (Boolean).
 Last Invoice Amount (LIA): represents the amount of the last amount.
