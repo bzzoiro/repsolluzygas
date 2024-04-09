@@ -82,7 +82,7 @@ class RepsolLuzYGasSensor():
             'Market': 'ML',
         }
 
-        response = requests.get('https://areacliente.repsolluzygas.com/api/houses', headers=headers, cookies=self.cookies)
+        response = requests.get('https://areacliente.repsolluzygas.com/api/v2/houses', headers=headers, cookies=self.cookies)
         data = response.json()
         _LOGGER.debug('Contracts Data {}'.format(data))
         contracts = {}
@@ -152,10 +152,10 @@ class RepsolLuzYGasSensor():
             'Market': 'ML',
         }
 
-        response = requests.get('https://areacliente.repsolluzygas.com/api/houses/{}/products/{}/consumption/accumulated'.format(house_id, contract_id), headers=headers, cookies=self.cookies)
+        response = requests.get('https://areacliente.repsolluzygas.com/api/v2/houses/{}/products/{}/consumption/accumulated'.format(house_id, contract_id), headers=headers, cookies=self.cookies)
         response = response.json()
          
-        vars = ['totalDays', 'consumption', 'amount', 'amountVariable', 'amountFixed'] 
+        vars = ['totalDays', 'consumption', 'amount', 'amountVariable', 'amountFixed', 'averageAmount'] 
         data = {}
 
         for var in vars:
@@ -164,13 +164,46 @@ class RepsolLuzYGasSensor():
         _LOGGER.debug('Costs Data {}'.format(data))
         return data
 
+    def get_next_invoice(self, uid, signature, tstamp, house_id, contract_id):
+        
+        headers = {
+            'Connection': 'keep-alive',
+            'Pragma': 'no-cache',
+            'Cache-Control': 'no-cache',
+            'sec-ch-ua': '^\\^Google',
+            'x-origin': 'WEB',
+            'sec-ch-ua-mobile': '?0',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36',
+            'Accept': 'application/json, text/plain, */*',
+            'UID': uid,
+            'signature': signature,
+            'signatureTimestamp': tstamp,
+            'Sec-Fetch-Site': 'same-origin',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Dest': 'empty',
+            'Referer': 'https://areacliente.repsolluzygas.com/mis-hogares',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Market': 'ML',
+        }
+
+        response = requests.get('https://areacliente.repsolluzygas.com/api/v2/houses/{}/products/{}/consumption/invoice-estimate'.format(house_id, contract_id), headers=headers, cookies=self.cookies)
+        response = response.json()
+         
+        vars = ['amount', 'amountVariable', 'amountFixed'] 
+        data = {}
+
+        for var in vars:
+            data[var] = response.get(var, 0)
+
+        _LOGGER.debug('Next Invoice Estimated Cost Data {}'.format(data))
+        return data
 
     def update(self):
 
         uid, signature, tstamp = self.login()
         contracts = self.get_contracts(uid, signature, tstamp)
         
-        data = {'consumption': 0, 'amount': 0, 'amountVariable': 0, 'amountFixed': 0}
+        data = {'consumption': 0, 'amount': 0, 'amountVariable': 0, 'amountFixed': 0, 'averageAmount': 0}
         for contract in contracts['information']:
             if not contract['active']:
                 continue
@@ -180,7 +213,7 @@ class RepsolLuzYGasSensor():
 
         if response['totalDays'] > 0:
             data['totalDays'] = response['totalDays']
-            data['averageAmount'] = round(float(data['amount'] / response['totalDays']),2)
+            data['averageAmount'] = response['averageAmount']
             data['number_of_contracts'] = contracts['number_of_contracts']
 
         if contracts and contracts['information']:
@@ -190,9 +223,12 @@ class RepsolLuzYGasSensor():
                     data['last_invoice_amount'] = invoices[0]['amount']
                 if invoices[0].get('status'):
                     data['last_invoice_paid'] = invoices[0]['status'] == 'PAID'
+                    
+            next_invoice = self.get_next_invoice(uid, signature, tstamp, contracts['house_id'], contracts['information'][0]['contract_id'])
+            if next_invoice:
+                data['nextInvoice'] = next_invoice['amount']
 
         self.data = data
 
         _LOGGER.debug('Sensor Data {}'.format(self.data))
         return True
-
